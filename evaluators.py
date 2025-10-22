@@ -16,6 +16,7 @@ def load_evaluator(args):
     else:
         raise NotImplementedError
 
+
 class EvaluatorBase:
     def __init__(self, args):
         self.max_n_tokens = args.evaluator_max_n_tokens
@@ -72,6 +73,7 @@ class NoEvaluator(EvaluatorBase):
 
     def on_topic_score(self, attack_prompt_list, original_prompt):
         return [1 for _ in attack_prompt_list] 
+
 
 class GPTEvaluator(EvaluatorBase):
     def __init__(self, args):

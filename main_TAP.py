@@ -261,7 +261,9 @@ if __name__ == '__main__':
         choices=["vicuna", 
                  "vicuna-api-model", 
                  "gpt-3.5-turbo", 
-                 "gpt-4", 
+                 "gpt-4",
+                 "gpt-4o",
+                 'gpt-5-mini-2025-08-07',
                  "gpt-4-turbo", 
                  "gpt-4-1106-preview", # This is same as gpt-4-turbo
                  'llama-2-api-model']
@@ -291,6 +293,8 @@ if __name__ == '__main__':
                  'vicuna-api-model', 
                  "gpt-3.5-turbo", 
                  "gpt-4",
+                 "gpt-4o",
+                 'gpt-5-mini-2025-08-07',
                  'gpt-4-turbo', 
                  'gpt-4-1106-preview', # This is same as gpt-4-turbo
                  "palm-2",
@@ -308,10 +312,12 @@ if __name__ == '__main__':
     ############ Evaluator model parameters ##########
     parser.add_argument(
         "--evaluator-model",
-        default="gpt-3.5-turbo",
+        default='gpt-5-mini-2025-08-07',
         help="Name of evaluator model.",
         choices=["gpt-3.5-turbo", 
-                 "gpt-4", 
+                 "gpt-4",
+                 "gpt-4o",
+                 'gpt-5-mini-2025-08-07',
                  "gpt-4-turbo", 
                  "gpt-4-1106-preview", 
                  "no-evaluator"]
@@ -363,7 +369,7 @@ if __name__ == '__main__':
     parser.add_argument(
         "--branching-factor",
         type = int,
-        default = 1,
+        default = 4,
         help = "Branching factor"
     )
     parser.add_argument(

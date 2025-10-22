@@ -212,7 +212,7 @@ def load_indiv_model(model_name):
     
     common.MODEL_NAME = model_name
     
-    if model_name in ["gpt-3.5-turbo", "gpt-4", 'gpt-4-1106-preview']:
+    if model_name in ["gpt-3.5-turbo", "gpt-4", "gpt-4o", 'gpt-4-1106-preview', 'gpt-5-mini-2025-08-07']:
         lm = GPT(model_name)
     elif model_name == "palm-2":
         lm = PaLM(model_name)
@@ -249,6 +249,10 @@ def load_indiv_model(model_name):
 
 def get_model_path_and_template(model_name):
     full_model_dict={
+        'gpt-5-mini-2025-08-07': {
+            'path': 'gpt-5-mini-2025-08-07',
+            'template': 'gpt-5-mini-2025-08-07'
+        },
         "gpt-4-1106-preview":{
             "path":"gpt-4-1106-preview",
             "template":"gpt-4-1106-preview"
@@ -260,6 +264,10 @@ def get_model_path_and_template(model_name):
         "gpt-4":{
             "path":"gpt-4",
             "template":"gpt-4"
+        },
+        "gpt-4o": {
+            "path": "gpt-4o",
+            "template": "gpt-4o",
         },
         "gpt-3.5-turbo": {
             "path": "gpt-3.5-turbo",
