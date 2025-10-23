@@ -224,12 +224,12 @@ class GPT(LanguageModel):
         output = self.API_ERROR_OUTPUT
         for _ in range(self.API_MAX_RETRY):
             try: 
-
                 response = GPT.client.chat.completions.create(
                     model = self.model_name,
                     messages = conv,
-                    max_tokens = max_n_tokens,
-                    temperature = temperature,
+                    max_completion_tokens = max_n_tokens,
+                    # Comment out temperature for GPT5
+                    # temperature = temperature,
                     top_p = top_p
                 )
                 output = response.choices[0].message.content
