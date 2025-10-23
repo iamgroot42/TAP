@@ -203,7 +203,10 @@ class GPT(LanguageModel):
     API_QUERY_SLEEP = 0.5
     API_MAX_RETRY = 20
     API_TIMEOUT = 20
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    client = OpenAI(
+        api_key=os.getenv("OPENAI_API_KEY"),
+        timeout=APIModel.API_TIMEOUT
+    )
 
     def generate(self, conv: List[Dict], 
                 max_n_tokens: int, 
@@ -227,8 +230,7 @@ class GPT(LanguageModel):
                     messages = conv,
                     max_tokens = max_n_tokens,
                     temperature = temperature,
-                    top_p = top_p,
-                    request_timeout = self.API_TIMEOUT
+                    top_p = top_p
                 )
                 output = response.choices[0].message.content
                 break
