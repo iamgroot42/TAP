@@ -3,7 +3,13 @@ import common
 from language_models import GPT, PaLM, HuggingFace, APIModelLlama7B, APIModelVicuna13B, GeminiPro
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from config import VICUNA_PATH, LLAMA_PATH, ATTACK_TEMP, TARGET_TEMP, ATTACK_TOP_P, TARGET_TOP_P, MAX_PARALLEL_STREAMS 
+from config import (
+    ATTACK_TEMP,
+    TARGET_TEMP,
+    ATTACK_TOP_P,
+    TARGET_TOP_P,
+    MAX_PARALLEL_STREAMS,
+)
 
 def load_target_model(args):
     target_llm = TargetLLM(model_name = args.target_model, 
@@ -212,7 +218,7 @@ def load_indiv_model(model_name):
     
     common.MODEL_NAME = model_name
     
-    if model_name in ["gpt-3.5-turbo", "gpt-4", "gpt-4o", 'gpt-4-1106-preview', 'gpt-5-mini-2025-08-07']:
+    if model_name in ["gpt-3.5-turbo", "gpt-4", "gpt-4o", 'gpt-4-1106-preview', 'gpt-5-mini-2025-08-07', 'gpt-5-nano-2025-08-07']:
         lm = GPT(model_name)
     elif model_name == "palm-2":
         lm = PaLM(model_name)
@@ -223,6 +229,9 @@ def load_indiv_model(model_name):
     elif model_name == 'vicuna-api-model':
         lm = APIModelVicuna13B(model_name)
     else:
+        if model_path is None:
+            raise ValueError(f"No checkpoint path configured for model '{model_name}'. Update config.py to include it.")
+
         model = AutoModelForCausalLM.from_pretrained(
             model_path, 
             dtype=torch.float16,
@@ -234,10 +243,18 @@ def load_indiv_model(model_name):
             use_fast=False
         ) 
 
-        if 'llama-2' in model_path.lower():
+        lower_model_path = model_path.lower()
+
+        if 'llama-2' in lower_model_path:
             tokenizer.pad_token = tokenizer.unk_token
             tokenizer.padding_side = 'left'
-        if 'vicuna' in model_path.lower():
+        elif 'llama-3' in lower_model_path:
+            tokenizer.pad_token = tokenizer.eos_token
+            tokenizer.padding_side = 'left'
+        elif 'llama' in lower_model_path:
+            tokenizer.padding_side = 'left'
+
+        if 'vicuna' in lower_model_path:
             tokenizer.pad_token = tokenizer.eos_token
             tokenizer.padding_side = 'left'
         if not tokenizer.pad_token:
@@ -248,7 +265,11 @@ def load_indiv_model(model_name):
     return lm, template
 
 def get_model_path_and_template(model_name):
-    full_model_dict={
+    full_model_dict = {
+        'gpt-5-nano-2025-08-07': {
+            'path': 'gpt-5-nano-2025-08-07',
+            'template': 'gpt-5-nano-2025-08-07'
+        },
         'gpt-5-mini-2025-08-07': {
             'path': 'gpt-5-mini-2025-08-07',
             'template': 'gpt-5-mini-2025-08-07'
@@ -274,7 +295,7 @@ def get_model_path_and_template(model_name):
             "template":"gpt-3.5-turbo"
         },
         "vicuna":{
-            "path": VICUNA_PATH,
+            "path": "lmsys/vicuna-13b-v1.5",
             "template":"vicuna_v1.1"
         },
         "vicuna-api-model":{
@@ -282,12 +303,24 @@ def get_model_path_and_template(model_name):
             "template": "vicuna_v1.1"
         },
         "llama-2":{
-            "path": LLAMA_PATH,
+            "path": "meta-llama/Llama-2-7b-chat-hf",
             "template":"llama-2"
         },
         "llama-2-api-model":{
             "path": None,
             "template": "llama-2-7b"
+        },
+        "llama-3":{
+            "path": "meta-llama/Meta-Llama-3-8B-Instruct",
+            "template":"llama-3"
+        },
+        "llama-3.1":{
+            "path": "meta-llama/Llama-3.1-8B-Instruct",
+            "template":"llama-3.1"
+        },
+        "qwen3": {
+            "path": "Qwen/Qwen3-8B",
+            "template":"qwen3"
         },
         "palm-2":{
             "path":"palm-2",
@@ -300,7 +333,3 @@ def get_model_path_and_template(model_name):
     }
     path, template = full_model_dict[model_name]["path"], full_model_dict[model_name]["template"]
     return path, template
-
-
-
-    

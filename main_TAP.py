@@ -264,6 +264,7 @@ if __name__ == '__main__':
                  "gpt-4",
                  "gpt-4o",
                  'gpt-5-mini-2025-08-07',
+                 'gpt-5-nano-2025-08-07',
                  "gpt-4-turbo", 
                  "gpt-4-1106-preview", # This is same as gpt-4-turbo
                  'llama-2-api-model']
@@ -288,12 +289,16 @@ if __name__ == '__main__':
         default = "vicuna",
         help = "Name of target model.",
         choices=["llama-2",
+                 "llama-3",
+                 "llama-3.1",
+                 "qwen3",
                  'llama-2-api-model', 
                  "vicuna",
                  'vicuna-api-model', 
                  "gpt-3.5-turbo", 
                  "gpt-4",
                  "gpt-4o",
+                 'gpt-5-nano-2025-08-07',
                  'gpt-5-mini-2025-08-07',
                  'gpt-4-turbo', 
                  'gpt-4-1106-preview', # This is same as gpt-4-turbo
@@ -312,11 +317,12 @@ if __name__ == '__main__':
     ############ Evaluator model parameters ##########
     parser.add_argument(
         "--evaluator-model",
-        default='gpt-5-mini-2025-08-07',
+        default='gpt-5-nano-2025-08-07',
         help="Name of evaluator model.",
         choices=["gpt-3.5-turbo", 
                  "gpt-4",
                  "gpt-4o",
+                 'gpt-5-nano-2025-08-07',
                  'gpt-5-mini-2025-08-07',
                  "gpt-4-turbo", 
                  "gpt-4-1106-preview", 
@@ -325,7 +331,7 @@ if __name__ == '__main__':
     parser.add_argument(
         "--evaluator-max-n-tokens",
         type = int,
-        default = 10,
+        default = 1024,
         help = "Maximum number of tokens for the evaluator."
     )
     parser.add_argument(

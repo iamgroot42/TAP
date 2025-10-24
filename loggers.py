@@ -1,11 +1,5 @@
-import os
-import pytz
 import wandb
 import pandas as pd
-from datetime import datetime
-
-from os import listdir
-from os.path import isfile, join
 
 import common 
 
@@ -116,4 +110,4 @@ class WandBLogger:
             max_score = df['judge_scores'].max()
             print(f"Max Score: {max_score}")
 
-        self.table.to_parquet(common.STORE_FOLDER + '/' + f'iter_{common.ITER_INDEX}_df')
+        self.table.to_parquet(common.STORE_FOLDER + '/' + f'iter_{common.ITER_INDEX}_df.parquet')

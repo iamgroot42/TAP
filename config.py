@@ -1,6 +1,3 @@
-VICUNA_PATH = "lmsys/vicuna-13b-v1.5"
-LLAMA_PATH = "meta-llama/Llama-2-7b-chat-hf" # ADD PATH
-
 VICUNA_API_LINK ="https://..." # ADD LINK
 LLAMA_API_LINK = "https://..." # ADD LINK
 

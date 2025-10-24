@@ -1,5 +1,4 @@
 from openai import OpenAI
-import anthropic
 import os
 import time
 import torch
@@ -35,7 +34,10 @@ class HuggingFace(LanguageModel):
                         max_n_tokens: int, 
                         temperature: float,
                         top_p: float = 1.0,):
-        inputs = self.tokenizer(full_prompts_list, return_tensors='pt', padding=True)
+        inputs = self.tokenizer(
+            full_prompts_list,
+            return_tensors='pt',
+            padding=True)
         inputs = {k: v.to(self.model.device.index) for k, v in inputs.items()} 
 
 
@@ -222,6 +224,18 @@ class GPT(LanguageModel):
             str: generated response
         '''
         output = self.API_ERROR_OUTPUT
+
+        # GPT5 API does not support temperature, reasoning should be minimal
+        if "gpt-5" in self.model_name:
+            extra_args = {
+                "verbosity": "low",
+                "reasoning_effort": "minimal"
+            }
+        else:
+            extra_args = {
+                "temperature":temperature
+            }
+
         for _ in range(self.API_MAX_RETRY):
             try: 
                 response = GPT.client.chat.completions.create(
@@ -230,7 +244,9 @@ class GPT(LanguageModel):
                     max_completion_tokens = max_n_tokens,
                     # Comment out temperature for GPT5
                     # temperature = temperature,
-                    top_p = top_p
+                    top_p = top_p,
+                    # Extra args for GPT5 and beyond models
+                    **extra_args
                 )
                 output = response.choices[0].message.content
                 break
