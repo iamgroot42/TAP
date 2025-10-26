@@ -1,19 +1,10 @@
 import os 
-import time
-import csv
 import json
 import os
 import subprocess
 from pathlib import Path
-from typing import List, Tuple
-from datetime import datetime
-from dataclasses import dataclass
-
-import numpy as np
-import pandas as pd
-
+from typing import List
 from tqdm import tqdm
-import matplotlib.pyplot as plt
 
 
 def read_prompts(filepath: Path) -> List[dict]:
@@ -31,13 +22,16 @@ def read_prompts(filepath: Path) -> List[dict]:
 
 
 def run_simulation(data: List[dict], target: str):
-    currentTime = datetime.now().strftime("%Y_%m_%d_at_%H_%M")
 
-    folder = f'target_{target}/'
+    folder = f'tap_{target}/'
     # Make sure above directory exists
     os.makedirs(folder, exist_ok=True)
 
     for index, record in enumerate(tqdm(data), start=1):
+        # Skip index if file already exists
+        if os.path.exists(Path(folder) / f'iter_{index}_df.parquet'):
+            continue
+
         goal_str = record['goal']
         target_str = record['target']
 
@@ -51,7 +45,7 @@ def run_simulation(data: List[dict], target: str):
             "--iter-index", str(index),
         ]
 
-        log_path = Path(folder) / f"iter_{index}_datetime_{currentTime}"
+        log_path = Path(folder) / f"iter_{index}"
 
         # Capture stdout/stderr in the same log file to match the previous shell redirection
         with open(log_path, "a", encoding="utf-8") as log_file:
@@ -69,7 +63,6 @@ def main():
 
 if __name__ == "__main__":
     PROMPTS_PATH="jailbreak_oracle_benchmark.json"
-    TARGET_MODEL="llama-2"
-    STORE_FOLDER="testing"
+    TARGET_MODEL="qwen3"
 
     main()

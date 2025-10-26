@@ -253,6 +253,8 @@ def load_indiv_model(model_name):
             tokenizer.padding_side = 'left'
         elif 'llama' in lower_model_path:
             tokenizer.padding_side = 'left'
+        elif 'qwen' in lower_model_path:
+            tokenizer.padding_side = 'left'
 
         if 'vicuna' in lower_model_path:
             tokenizer.pad_token = tokenizer.eos_token
